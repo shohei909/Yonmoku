@@ -6,10 +6,10 @@ package yonmoku.brain {
 		public var thinking:Boolean;
 		function Human() {}
 		
-		override public function think( moves:Vector.<Move> ):void {
+		override public function think( moves:Vector.<Move> ):void{
 			thinking = true;
+			return null;
 		}
-		
 		override public function stop():void {
 			thinking = false;
 		}
