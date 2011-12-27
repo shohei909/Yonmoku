@@ -19,7 +19,7 @@ package yonmoku{
 			addChild( 
 				viewer = new Viewer( 
 					new Person("PLAYER1", Data.image["man"]["nobody"], new Human() ) ,
-					new Person("PLAYER1", Data.image["man"]["nobody"], new Human() )
+					new Person("PLAYER2", Data.image["man"]["nobody"], new Human() )
 				)
 			);
 		}
