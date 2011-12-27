@@ -8,8 +8,8 @@ package yonmoku{
 	public class Main extends Brouser {
 		public var viewer:Viewer;
 		function Main() {
-			Data.load();
-			Data.onLoaded = init;
+			Data.setupImage();
+			init();
 		}
 		public function init():void {
 			var g:Graphics = graphics;
