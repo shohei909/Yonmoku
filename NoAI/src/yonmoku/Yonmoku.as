@@ -59,14 +59,12 @@ package yonmoku{
 		}
 		
 		
-		/** 勝負を進める。指された着手を返す。　*/
-		public function progress():Move {
-			if ( finished || wait ) { return null; }
+		/** 勝負を進める。　*/
+		public function progress():void {
+			if ( finished || wait ) { return; }
 			var p:Vector.<Move> = movable();
-			var m:Move = brains[ int(turn) ].think( p ); //brainに着手を申請。
-			if ( m ) { move( m ); }
-			else { wait = true; }
-			return m;
+			wait = true;
+			brains[ int(turn) ].think( p ); //brainに着手を申請。
 		}
 		
 		
@@ -81,7 +79,7 @@ package yonmoku{
 			}
 			return (_movables = ms);
 		}
-		private var _movables:Vector.<Move>;	//movableのログ
+		private var _movables:Vector.<Move>;	//着手候補のログ
 		private var log:Move;					//最後にログを取った位置
 		
 		
@@ -214,7 +212,6 @@ package yonmoku{
 			wait = false;
 			finished = false;
 		}
-		
 		
 	}
 }

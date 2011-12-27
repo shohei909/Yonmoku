@@ -38,6 +38,7 @@ package yonmoku.viewer{
 		public static const drawFilter:GlowFilter = new GlowFilter( 0xFFCC00, 1, 8, 8, 16 );
 		public static const winFilter:GlowFilter = new GlowFilter( 0xFF6633, 1, 8, 8, 16 );
 		public static const loseFilter:GlowFilter = new GlowFilter( 0x3366FF, 1, 8, 8, 16 );
+		public static const passFilter:GlowFilter = new GlowFilter( 0xFF3300, 1, 4, 4, 100 );
 		
 		function Viewer( p1:Person, p2:Person ):void {
 			this.source = new Yonmoku( p1.brain, p2.brain );
@@ -95,8 +96,8 @@ package yonmoku.viewer{
 			update();
 		}
 		
+		//ピースに使う画像をランダムに選択
 		private function setPiece():void {
-			//ピースに使う画像をランダムに選択
 			var pa:Array = Data.IMG[0][1];
 			var n:int = pa.length;
 			var i1:int = Math.random() * n;
@@ -132,6 +133,7 @@ package yonmoku.viewer{
 			}
 		}
 		
+		/** 表示の更新　*/
 		public function update():void {
 			last = source.last;
 			var index:int = log.indexOf( last );
@@ -155,10 +157,25 @@ package yonmoku.viewer{
 			btns.undo.enable = btns.first.enable = Boolean( last );
 			btns.redo.enable = btns.end.enable = ( step != log.length );
 			
+			var text:Text;
+				 
+			if ( last && last.value == -1 ) { 
+				text = results[ int(! source.turn ) ];
+				text.setText( "PASS" );
+				text.filters = [ passFilter ]
+			}else {
+				for ( i = 0; i < 2; i++ ) {
+					text = results[i];
+					if( text.text != "" ){
+						text.setText( "" );
+					}
+				}
+			}
+			
 			if ( finished != source.finished ) {
 				finished = source.finished
-				var text:Text;
-				if( finished ){
+				if ( finished ) {
+					field.finish();
 					var arr:Array = [["DRAW", "DRAW"], ["WIN", "LOSE"], ["LOSE", "WIN"]][source.winner];
 					var filter:Array = [[ drawFilter, drawFilter], [ winFilter,loseFilter], [loseFilter, winFilter]][source.winner];
 					for ( i = 0; i < 2; i++ ) {
@@ -167,6 +184,7 @@ package yonmoku.viewer{
 						text.filters = [ filter[i] ]
 					}
 				}else {
+					field.restart();
 					for ( i = 0; i < 2; i++ ) {
 						text = results[i];
 						text.setText( "" );
