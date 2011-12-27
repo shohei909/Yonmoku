@@ -1,8 +1,7 @@
 package yonmoku{
-	/** 知能 */
+	/** 知能用クラス。継承して使う。 */
 	public class Brain {
 		public var target:Game;
-		function Brain(){}
 		
 		/** 自分の打てる手(moves)の中から、打つべき着手を探す。 */
 		public function think( moves:Vector.<Move> ):Move {

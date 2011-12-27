@@ -1,14 +1,12 @@
 package yonmoku{
-	/**
-	 * 四目並べのクラス。機能は必要最低限でまとめる。
-	 */
+	/**  四目並べのクラス。機能は必要最低限でまとめる。 */
 	public class Yonmoku implements Game {
 		public static const WIDTH:int = 6;		//盤の幅
 		public static const HEIGHT:int = 6;		//盤の高さ
 		public static const CONNECT:int = 4;	//四つ並べたら勝ち
-		public static const PASS_COUNT:int = 2;		//パスが可能になるまでの手数。
+		public static const PASS_COUNT:int = 2;	//パスが可能になるまでの手数。
 		
-		public var brains:Vector.<Brain>;		//二人の人工頭脳。
+		public var brains:Vector.<Brain>;		//二人の頭脳。
 		public var board:Vector.<Vector.<Boolean>>;	//盤面。falseが先手の駒、trueが後手の駒。
 		
 		public var finished:Boolean;			//ゲームが終了しているか？
@@ -212,6 +210,5 @@ package yonmoku{
 			wait = false;
 			finished = false;
 		}
-		
 	}
 }
