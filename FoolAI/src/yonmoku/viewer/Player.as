@@ -54,7 +54,6 @@ package yonmoku.viewer {
 			line.filters = select?[glow]:[];
 			var b:BitmapData = line.bitmapData;
 			b.fillRect( b.rect, select ? 0xFF0000:0 );
-			
 		}
 	}
 }

@@ -4,6 +4,7 @@ package yonmoku.viewer{
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.filters.GlowFilter;
+	import flash.utils.setTimeout;
 	import yonmoku.*;
 	import yonmoku.brain.Human;
 	import yonmoku.brouser.Page;
@@ -18,6 +19,7 @@ package yonmoku.viewer{
 		public var source:Yonmoku;
 		public var field:Field;
 		public var wait:int;		//待機
+		public var menu:Menu;
 		
 		public var players:Vector.<Player>;		//プレイヤー窓
 		public var people:Vector.<Person>;		//個人データ
@@ -40,9 +42,13 @@ package yonmoku.viewer{
 		public static const loseFilter:GlowFilter = new GlowFilter( 0x3366FF, 1, 8, 8, 16 );
 		public static const passFilter:GlowFilter = new GlowFilter( 0xFF3300, 1, 4, 4, 100 );
 		
-		function Viewer( p1:Person, p2:Person ):void {
-			this.source = new Yonmoku( p1.brain, p2.brain );
-			people = Vector.<Person>([ p1, p2 ]);
+		function Viewer():void {
+			people = new Vector.<Person>(2);
+			
+			menu = new Menu( this );
+			menu.lists[0].index = 0; menu.lists[1].index = 1;
+			
+			this.source = new Yonmoku( people[0].brain, people[1].brain );
 			setPiece();
 			
 			//フィールドを設定
@@ -56,7 +62,6 @@ package yonmoku.viewer{
 			field.addEventListener( MouseEvent.MOUSE_OUT, onMouseOut );
 			field.addEventListener( MouseEvent.CLICK, onClick );
 			
-			
 			setPlayer();
 			
 			//ボタン
@@ -64,36 +69,36 @@ package yonmoku.viewer{
 			addChild( btn = passBtn = new TextButton( "PASS", pass) );
 			btn.y = HEIGHT - 45; btn.x = (WIDTH - btn.width) / 2;
 			
-			var arr:Array = [ "new", "first", "undo", "redo", "end" ];
-			var ts:Array = [ "NEW","さいしょ","もどる","すすむ","さいご"]
-			var fs:Array = [ newGame, first, undo, redo, end ];
+			var arr:Array = [ "new", "system", "first", "undo", "play", "redo", "end" ];
+			var ts:Array = [ "NEW", "メニュー", "さいしょ","もどる", "さいかい", "すすむ","さいご"]
+			var fs:Array = [ newGame, openMenu, first, undo, play, redo, end ];
 			var l:int = arr.length;
 			
 			for ( var i:int = 0; i < l; i++ ) {
 				var icon:IconButton;
 				addChild( icon = new IconButton( Data.image["move"][arr[i]], ts[i], fs[i] ) );
-				icon.x = 5 + WIDTH / 2 + 36 * (i - l / 2); icon.y = HEIGHT - 37;
+				icon.x = 10 + WIDTH / 2 + 42 * (i - l / 2); icon.y = HEIGHT - 37;
 				btns[arr[i]] = icon;
 			}
 			
 			log = new Vector.<Move>();
-			update();
+			progress();
 		}
+		
 		
 		//フレームごとの動作
 		private function _onFrame(e:Event):void {
 			if ( wait > 0 ) { wait--; return }
-			if ( source.last != last ) { update(); }
+			if ( source.last != last ) { 
+				progress(); 
+			}
 		}
 		
-		private function newGame():void {
-			this.source = new Yonmoku( people[0].brain, people[1].brain );
-			setPiece();
-			setPlayer();
-			
-			log = new Vector.<Move>();
-			step = 0;
+		//ゲームを進行
+		private function progress():void {
 			update();
+			if ( human ) { source.progress(); }
+			else { setTimeout( source.progress, 30 )　 }
 		}
 		
 		//ピースに使う画像をランダムに選択
@@ -106,7 +111,7 @@ package yonmoku.viewer{
 			pieces = Vector.<BitmapData>([ Data.image["piece"][pa[i1]], Data.image["piece"][pa[i2]] ]);
 		}
 		
-		/** プレーヤーの表示 */
+		// プレーヤーの表示
 		private function setPlayer():void {
 			if( players ){
 				while ( players.length > 0 ) { removeChild( players.pop() ); }
@@ -133,6 +138,18 @@ package yonmoku.viewer{
 			}
 		}
 		
+		/** 新しいゲームを開始　*/
+		public function newGame():void {
+			this.source = new Yonmoku( people[0].brain, people[1].brain );
+			setPiece();
+			setPlayer();
+			
+			log = new Vector.<Move>();
+			step = 0;
+			
+			progress();
+		}
+		
 		/** 表示の更新　*/
 		public function update():void {
 			last = source.last;
@@ -156,6 +173,7 @@ package yonmoku.viewer{
 			passBtn.enable = (!source.finished && source.passCount == 0);
 			btns.undo.enable = btns.first.enable = Boolean( last );
 			btns.redo.enable = btns.end.enable = ( step != log.length );
+			btns.play.enable = false;
 			
 			var text:Text;
 				 
@@ -192,7 +210,6 @@ package yonmoku.viewer{
 					}
 				}
 			}
-			source.progress();
 			onMouseMove( null );
 		}
 		
@@ -219,15 +236,22 @@ package yonmoku.viewer{
 		public function undo():void {
 			source.back();
 			update();
+			if ( human ) { source.progress(); }
+			else if(! source.finished ){ btns.play.enable = true; }
 		}
+		
 		public function first():void {
 			while ( source.last ) { source.back(); }
 			update();
+			if ( human ) { source.progress(); }
+			else if(! source.finished ){ btns.play.enable = true; }
 		}
 		public function redo():void {
 			source.brains[ int(source.turn) ].stop();
 			source.move( log[ step ] );
 			update();
+			if ( human ) { source.progress(); }
+			else if(! source.finished ){ btns.play.enable = true; }
 		}
 		public function end():void {
 			source.brains[ int(source.turn) ].stop();
@@ -235,6 +259,12 @@ package yonmoku.viewer{
 				source.move( log[ i ] ); 
 			}
 			update();
+			if ( human ) { source.progress(); }
+			else if(! source.finished ){ btns.play.enable = true; }
+		}
+		public function play():void{ source.progress(); }
+		public function openMenu():void {
+			brouser.alert( menu );
 		}
 	}
 }

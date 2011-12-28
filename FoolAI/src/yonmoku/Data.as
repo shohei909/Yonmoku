@@ -14,12 +14,15 @@ package yonmoku{
         static private var move:Class;
 		[Embed(source='../asset/piece.png')]
         static private var piece:Class;
+		[Embed(source='../asset/head.png')]
+        static private var head:Class;
 
 		public static const IMG:Array = [
 			["piece", [ "strawberry", "grape", "banana", "orange", "meron" ]],
 			["man", [ "nobody" ]],
 			["back", [ "field", "stage" ]],
-			["move", [ "first","undo","redo","end","new" ]]
+			["move", [ "first","undo","redo","end","new","play","system", "back" ]],
+			["head", [ "fool" ]]
 		];
 		public static var image:Object = {};
 		public static var onLoaded:Function;
@@ -46,7 +49,6 @@ package yonmoku{
 					obj[ name ] = b;
 				}
 			}
-			trace( image["man"]["nobody"].width );
 		}
 		
 	}

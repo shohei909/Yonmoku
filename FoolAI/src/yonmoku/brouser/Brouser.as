@@ -1,5 +1,8 @@
 package yonmoku.brouser {
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.filters.BlurFilter;
+	import flash.filters.ColorMatrixFilter;
 	/**
 	 * redoやundoが簡単にできるPage閲覧クラス
 	 */
@@ -31,6 +34,25 @@ package yonmoku.brouser {
 			page.close();
 			page = log[--p];
 			page.open( this );
+		}
+		
+		//アラート
+		private var alertWindow:DisplayObject;
+		
+		/** dを最前面に表示する */
+		public function alert( d:DisplayObject ):void {
+			this.filters = [ new BlurFilter(8, 8, 2), new ColorMatrixFilter([0.6,0.2,0.2,0,-19,0.2,0.6,0.2,0,-19,0.2,0.2,0.6,0,19,0,0,0,1,0]) ];
+			this.mouseChildren = false;
+			stage.addChild( alertWindow = d );
+		}
+		
+		/**　alertを閉じる */
+		public function close():void {
+			if (! alertWindow ) { return; }
+			stage.removeChild( alertWindow );
+			this.filters = [];
+			this.mouseChildren = true;
+			alertWindow = null;
 		}
 	}
 }

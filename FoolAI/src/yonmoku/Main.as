@@ -16,12 +16,10 @@ package yonmoku{
 			g.beginBitmapFill( Data.image["back"]["stage"] );
 			g.drawRect( 0, 0, stage.stageWidth, stage.stageHeight );
 			
-			addChild( 
-				viewer = new Viewer( 
-					new Person("PLAYER", Data.image["man"]["nobody"], new Human() ) ,
-					new Person("COM", Data.image["man"]["nobody"], new FoolAI() )
-				)
+			open( 
+				viewer = new Viewer()
 			);
+			
 		}
 	}
 }
