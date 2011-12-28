@@ -14,9 +14,9 @@ package yonmoku.viewer {
 			this.viewer = viewer;
 			
 			//ボタン
-			var arr:Array = [ "back", "new" ];
-			var ts:Array = [ "もどる", "NEW" ]
-			var fs:Array = [ back, newGame ];
+			var arr:Array = [ "back", "new", "spin" ];
+			var ts:Array = [ "もどる", "NEW", "こうたい" ]
+			var fs:Array = [ back, newGame, spin ];
 			var l:int = arr.length;
 			
 			for ( var i:int = 0; i < l; i++ ) {
@@ -58,6 +58,12 @@ package yonmoku.viewer {
 		
 		private function back():void {
 			viewer.brouser.close();
+		}
+		
+		private function spin():void {
+			var tmp:int = lists[0].index;
+			lists[0].index = lists[1].index;
+			lists[1].index = tmp;
 		}
 		
 		private function newGame():void {

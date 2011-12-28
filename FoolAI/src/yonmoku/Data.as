@@ -21,7 +21,7 @@ package yonmoku{
 			["piece", [ "strawberry", "grape", "banana", "orange", "meron" ]],
 			["man", [ "nobody" ]],
 			["back", [ "field", "stage" ]],
-			["move", [ "first","undo","redo","end","new","play","system", "back" ]],
+			["move", [ "first","undo","redo","end","new","play","system", "back", "spin" ]],
 			["head", [ "fool" ]]
 		];
 		public static var image:Object = {};

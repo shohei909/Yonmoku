@@ -10,7 +10,7 @@ package yonmoku.viewer {
 	public class IconList extends Sprite{
 		private var _index:int = 0;
 		public function set index( i:int ):void { 
-			if ( _index == i ) { return; }
+			if ( _index == i || i < 0 || i >= list.length ) { return; }
 			_index = i;
 			frame.x = (fw + interval) * i;
 			dispatchEvent( new Event( Event.CHANGE ) );
