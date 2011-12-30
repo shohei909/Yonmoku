@@ -83,16 +83,9 @@ package yonmoku{
 		
 		/** 終局を判定 */
 		private function _check():void {
-			//引き分けの判定
-			var p:Vector.<Move> = movable();
-			if ( p.length == int( passCount == 0 ) ) {
-				finished = true;
-				winner = 0;
-				return;
-			}
 			
 			var line:Vector.< Boolean >;
-			var turn:Boolean, peace:Boolean;
+			var turn:Boolean, piece:Boolean;
 			var connect:int = 0, x:int = 0, y:int = 0, i:int = 0, h:int = 0, w:int = 0;
 			
 			//縦方向の判定
@@ -103,9 +96,9 @@ package yonmoku{
 				if ( l < CONNECT ) { continue; }
 				connect = 0;			
 				for ( y = 0; y < l; y++ ) {
-					peace = line[y];
-					if ( connect == 0 || turn != peace ) {
-						turn = peace; connect = 1;
+					piece = line[y];
+					if ( connect == 0 || turn != piece ) {
+						turn = piece; connect = 1;
 					}else{
 						connect++;
 						if ( connect == CONNECT ) { finished = true; winner = turn + 1; return; }
@@ -127,10 +120,10 @@ package yonmoku{
 						if ( x + CONNECT < WIDTH ) { continue; }
 						else { break; }
 					}
-					peace = line[y];
+					piece = line[y];
 					count++;
-					if ( connect == 0 || turn != peace ) {
-						turn = peace; connect = 1;
+					if ( connect == 0 || turn != piece ) {
+						turn = piece; connect = 1;
 					}else{
 						connect++;
 						if ( connect == CONNECT ) { finished = true; winner = turn + 1; return; }
@@ -156,9 +149,9 @@ package yonmoku{
 							if ( y < hh ) { continue; }
 							else { break; }
 						}
-						peace = line[y];
-						if ( connect == 0 || turn != peace ) {
-							turn = peace; connect = 1;
+						piece = line[y];
+						if ( connect == 0 || turn != piece ) {
+							turn = piece; connect = 1;
 						}else{
 							connect++;
 							if ( connect == CONNECT ) { finished = true; winner = turn + 1; return; }
@@ -177,15 +170,23 @@ package yonmoku{
 							if ( y < CONNECT ) { break; }
 							else { continue; }
 						}
-						peace = line[y];
-						if ( connect == 0 || turn != peace ) {
-							turn = peace; connect = 1;
+						piece = line[y];
+						if ( connect == 0 || turn != piece ) {
+							turn = piece; connect = 1;
 						}else{
 							connect++;
 							if ( connect == CONNECT ) { finished = true; winner = turn + 1; return; }
 						}
 					}
 				}
+			}
+			
+			//引き分けの判定
+			var p:Vector.<Move> = movable();
+			if ( p.length == int( passCount == 0 ) ) {
+				finished = true;
+				winner = 0;
+				return;
 			}
 		}
 		

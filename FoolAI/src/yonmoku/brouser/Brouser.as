@@ -41,7 +41,7 @@ package yonmoku.brouser {
 		
 		/** dを最前面に表示する */
 		public function alert( d:DisplayObject ):void {
-			this.filters = [ new BlurFilter(8, 8, 2), new ColorMatrixFilter([0.6,0.2,0.2,0,-19,0.2,0.6,0.2,0,-19,0.2,0.2,0.6,0,19,0,0,0,1,0]) ];
+			this.filters = [ new BlurFilter(8, 8, 2), new ColorMatrixFilter([0.5,0.2,0.2,0,24,0.2,0.5,0.2,0,24,0.2,0.2,0.5,0,69,0,0,0,1,0]) ];
 			this.mouseChildren = false;
 			stage.addChild( alertWindow = d );
 		}
