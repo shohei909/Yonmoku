@@ -101,14 +101,16 @@ package yonmoku{
 				}
 			}
 			
-			var hh:int = hMax - connect, k:int, xx:int;
+			var hh:int = hMax - CONNECT + 1, k:int = 0, xx:int = 0;
 			
 			//ななめ方向の判定
 			for ( k = -1; k < 2; k += 2 ) {
 				xx = (k < 0) ? (WIDTH - 1) : 0;
 				for ( i = 1; i < hh; i++ ) {
 					connect = 0;
-					for ( x = xx, y = i; y < h; y++, x += k ) {
+					space = 0;
+					s = 0;
+					for ( x = xx, y = i; y < HEIGHT; y++, x += k ) {
 						line = board[x];
 						if ( line.length <= y ) {
 							connect++;
@@ -134,6 +136,8 @@ package yonmoku{
 				xx = (k < 0) ? (WIDTH - 1) : 0;
 				for ( i = HEIGHT; i >= CONNECT; i-- ) {
 					connect = 0;
+					space = 0;
+					s = 0;
 					for ( x = xx, y = i - 1; y >= 0; y--, x += k ) {
 						line = board[x];
 						if ( line.length <= y ) {
