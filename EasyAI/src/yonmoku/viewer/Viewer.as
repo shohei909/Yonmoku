@@ -42,6 +42,8 @@ package yonmoku.viewer{
 		public static const loseFilter:GlowFilter = new GlowFilter( 0x3366FF, 1, 8, 8, 16 );
 		public static const passFilter:GlowFilter = new GlowFilter( 0xFF3300, 1, 4, 4, 100 );
 		
+		public var comments:Vector.<Text>;
+		
 		function Viewer():void {
 			people = new Vector.<Person>(2);
 			
@@ -83,6 +85,7 @@ package yonmoku.viewer{
 			
 			log = new Vector.<Move>();
 			progress();
+			
 		}
 		
 		
@@ -121,6 +124,7 @@ package yonmoku.viewer{
 			var pw:int = (WIDTH - field.width) / 2;
 			players = new Vector.<Player>;
 			results = new Vector.<Text>;
+			comments = new Vector.<Text>;
 			for ( var i:int = 0; i < 2;  i++ ) {
 				var p:Player;
 				
@@ -135,6 +139,12 @@ package yonmoku.viewer{
 				t.filters = [ drawFilter ];
 				p.addChild( t );
 				results.push( t );
+				
+				t = comments[i] = new Text( "評価値:", 10, 0, "center" );
+				t.x = p.width / 2;
+				t.y = 135;
+				t.filters = [];
+				p.addChild( t );
 			}
 		}
 		
@@ -166,8 +176,12 @@ package yonmoku.viewer{
 				step = index + l + 1;
 			}else { step = index + 1; }
 			
+			var e:Number = source.evaluate( Data.TABLE );
 			human = source.brains[ int( source.turn ) ] as Human;
-			for ( var i:int = 0; i < 2; i++ ) { players[i].draw( !source.finished && (source.turn == (i != 0)) ); }
+			for ( var i:int = 0; i < 2; i++ ) { 
+				players[i].draw( !source.finished && (source.turn == (i != 0)) ); 
+				comments[i].setText( "評価値:" + ((source.turn == (i == 1)) ? 1 : -1) * e );
+			}
 			
 			field.update();
 			passBtn.enable = (!source.finished && source.passCount == 0);
@@ -176,7 +190,7 @@ package yonmoku.viewer{
 			btns.play.enable = false;
 			
 			var text:Text;
-				 
+			
 			if ( last && last.value == -1 ) { 
 				text = results[ int(! source.turn ) ];
 				text.setText( "PASS" );
@@ -189,6 +203,7 @@ package yonmoku.viewer{
 					}
 				}
 			}
+			
 			
 			if ( finished != source.finished ) {
 				finished = source.finished

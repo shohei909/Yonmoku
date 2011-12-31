@@ -16,7 +16,28 @@ package yonmoku{
         static private var piece:Class;
 		[Embed(source='../asset/head.png')]
         static private var head:Class;
-
+		
+		static public const P:Array = [ 0, 2, 16, 128, 10000 ];
+		static public const TABLE:Array = [
+			P[0], // 0
+			P[1], // 1
+			P[1], // 10
+			P[2], // 11
+			P[1], // 100
+			P[2], // 101
+			P[2], // 110
+			P[3], // 111
+			P[1], // 1000
+			P[2], // 1001
+			P[2], // 1010
+			P[3], // 1011
+			P[2], // 1100
+			P[3], // 1101
+			P[3], // 1110
+			int.MAX_VALUE >> 1, // 勝ち
+			P[4]
+		];
+		
 		public static const IMG:Array = [
 			["piece", [ "strawberry", "grape", "banana", "orange", "meron" ]],
 			["man", [ "nobody" ]],

@@ -20,25 +20,7 @@ package yonmoku{
 		
 		public var wait:Boolean;				//プレーヤー着手を待機しているかどうか?
 		
-		static public const P:Array = [ 0, 1, 4, 32, 2048 ];
-		static public const TABLE:Array = [
-			P[0], // 0
-			P[1], // 1
-			P[1], // 10
-			P[2], // 11
-			P[1], // 100
-			P[2], // 101
-			P[2], // 110
-			P[3], // 111
-			P[1], // 1000
-			P[2], // 1001
-			P[2], // 1010
-			P[3], // 1011
-			P[2], // 1100
-			P[3], // 1101
-			P[3], // 1110
-			P[4], // 1111
-		];
+		;
 		
 		/** コンストラクタ */
 		function Yonmoku( b1:Brain, b2:Brain ) {
@@ -53,12 +35,13 @@ package yonmoku{
 		
 		
 		/** 評価関数、現在のプレーヤーについて計算 */
-		public function evaluate( ...args ):Number { 
+		public function evaluate( table:Array = null ):Number { 
 			var n:Number = 0;
 			var s:int = 0;
 			var line:Vector.< Boolean >;
 			var t:Boolean, piece:Boolean;
 			var connect:int = 0, space:int = 0, x:int = 0, y:int = 0, i:int = 0, h:int = 0, hMax:int = 0;
+			var max:int = 0;
 			
 			//縦方向の判定
 			for ( x = 0; x < WIDTH; x++ ) {
@@ -75,7 +58,7 @@ package yonmoku{
 						s = ((s << 1) + 1) & 0xF;
 						connect++;
 						if ( connect >= CONNECT ) {
-							n += ((t == turn) ? 2 : -1) * TABLE[s];
+							n += ((t == turn) ? 1.5 : -1) * table[s];
 						}
 					}
 				}
@@ -86,7 +69,7 @@ package yonmoku{
 					connect++;
 					s = (s << 1) & 0xF;
 					if ( connect >= CONNECT ) {
-						n += ((t == turn) ? 2 : -1) * TABLE[s];
+						n += ((t == turn) ? 1.5 : -1) * table[s];
 					}
 				}
 			}
@@ -113,7 +96,7 @@ package yonmoku{
 						space = 0;
 					}
 					if ( connect >= CONNECT ) {
-						n += ((t == turn) ? 2 : -1) * TABLE[s];
+						n += ((t == turn) ? 1.5 : -1) * table[s];
 					}
 				}
 			}
@@ -142,7 +125,7 @@ package yonmoku{
 							space = 0;
 						}
 						if ( connect >= CONNECT ) {
-							n += ((t == turn) ? 2 : -1) * TABLE[s];
+							n += ((t == turn) ? 1.5 : -1) * table[s];
 						}
 					}
 				}
@@ -168,12 +151,15 @@ package yonmoku{
 							space = 0;
 						}
 						if ( connect >= CONNECT ) {
-							n += ((t == turn) ? 2 : -1) * TABLE[s];
+							n += ((t == turn) ? 1.5 : -1) * table[s];
 						}
 					}
 				}
 			}
-			if ( P[CONNECT] < n ) { n = P[CONNECT]; }
+			
+			if ( table[0x10] < n ) { n = table[0x10]; }
+			if ( -table[0x10] > n ) { n = -table[0x10]; }
+			
 			return n;
 		}
 		

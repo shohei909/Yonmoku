@@ -16,7 +16,7 @@ package yonmoku.viewer {
 			
 			//ボタン
 			var arr:Array = [ "back", "new", "spin" ];
-			var ts:Array = [ "もどる", "NEW", "こうたい" ]
+			var ts:Array = [ "キャンセル", "NEW", "こうたい" ]
 			var fs:Array = [ back, newGame, spin ];
 			var l:int = arr.length;
 			
@@ -31,7 +31,7 @@ package yonmoku.viewer {
 				var text:Text;
 				var a2:Array = [
 					new Person( "プレーヤー", Data.image["man"]["nobody"], new Human() ),
-					new Person( "AI 2号", Data.image["head"]["easy"], new EasyAI() ),
+					new Person( "AI 2号", Data.image["head"]["easy"], new EasyAI( Data.TABLE ) ),
 					new Person( "AI 1号", Data.image["head"]["fool"], new FoolAI() ),
 				]
 				
@@ -57,8 +57,14 @@ package yonmoku.viewer {
 				viewer.people[i] = people[i][0];
 			}
 		}
+		public var log:Vector.<int>;
 		
-		private function back():void {
+		private function back():void { 
+			if ( log != null ) {
+				lists[0].index = log[0];
+				lists[1].index = log[1];
+				log = null;
+			}
 			viewer.brouser.close();
 		}
 		
@@ -70,10 +76,14 @@ package yonmoku.viewer {
 		
 		private function newGame():void {
 			viewer.newGame();
+			log = null;
 			viewer.brouser.close();
 		}
 		
-		private function onChange( e:Event ):void { 
+		private function onChange( e:Event ):void {
+			if ( log == null ) {
+				log = Vector.<int>( [lists[0].index, lists[1].index] )
+			}
 			var i:int = lists.indexOf( e.target );
 			viewer.people[i] = people[i][ lists[i].index ]
 		}
