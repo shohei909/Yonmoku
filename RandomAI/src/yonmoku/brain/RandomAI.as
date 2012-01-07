@@ -5,14 +5,16 @@ package yonmoku.brain {
 	/** 
 	 * ミニマックス法AIと見せかけて、実際はネガアルファ法。
 	 **/
-	public class MiniMaxAI extends Brain{
+	public class RandomAI extends Brain{
 		static private var gamePool:Vector.<Game> = new Vector.<Game>(); 	//ゲームの使い回し用のプール
 		public var table:Array; 					//得点評価用のテーブル。
 		public var limit:int;						//先読みの上限となる手の数
+		public var rate:Number;						//間引きする率。
 		
-		function MiniMaxAI( limit:int, table:Array ):void { 
+		function RandomAI( rate:Number, limit:int, table:Array ):void { 
 			this.table = table;
 			this.limit = limit;
+			this.rate = rate;
 		}
 		
 		/** 
@@ -56,6 +58,7 @@ package yonmoku.brain {
 		private function _evaluateHeap( move:Move, alpha:Number, deepest:int, depth:int = 0 ):void {
 			var task:Array;
 			if (! (task = move.next) ) {
+				if ( Math.random() > rate ) { return; }
 				var g:Game = move.prev.game.clone();
 				g.move( move );
 				move.point = g.evaluate( table );
@@ -70,7 +73,11 @@ package yonmoku.brain {
 					var p:Number = next.point;
 					if ( p < min ) { min = p; }
 				}
-				move.point = -min;
+				if ( min == Infinity ) {
+					move.point = move.game.evaluate( table );
+				}else{
+					move.point = -min;
+				}
 			}
 			
 		}

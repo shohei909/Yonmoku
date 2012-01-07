@@ -5,6 +5,7 @@ package yonmoku.viewer {
 	import yonmoku.brain.FoolAI;
 	import yonmoku.brain.Human;
 	import yonmoku.brain.MiniMaxAI;
+	import yonmoku.brain.RandomAI;
 	import yonmoku.Data;
 	public class Menu extends Sprite {
 		public var viewer:Viewer;
@@ -32,6 +33,7 @@ package yonmoku.viewer {
 				var text:Text;
 				var a2:Array = [
 					new Person( "プレーヤー", Data.image["man"]["nobody"], new Human() ),
+					new Person( "AI 4号", Data.image["head"]["random"], new RandomAI( 0.60, 4000, Data.TABLE ) ),
 					new Person( "AI 3号", Data.image["head"]["minimax"], new MiniMaxAI( 2300, Data.TABLE ) ),
 					new Person( "AI 2号", Data.image["head"]["easy"], new EasyAI( Data.TABLE ) ),
 					new Person( "AI 1号", Data.image["head"]["fool"], new FoolAI() ),
